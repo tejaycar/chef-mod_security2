@@ -1,0 +1,24 @@
+---
+driver:
+  name: vagrant
+
+driver_config:
+  require_chef_omnibus: true
+
+provisioner:
+  name: chef_zero
+  require_chef_omnibus: true
+  chef_omnibus_url: https://www.getchef.com/chef/install.sh
+
+platforms:
+  - name: ubuntu-12.04
+  - name: centos-6.4
+
+suites:
+  - name: standalone
+    run_list:
+      - recipe[mod_security2]
+    attributes:
+      mod_security2:
+        platform: nginx
+
