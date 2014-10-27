@@ -8,4 +8,3 @@ RSpec.configure do |config|
 end
 
 ChefSpec::Coverage.start!
-

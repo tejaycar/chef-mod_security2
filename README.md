@@ -1,6 +1,7 @@
 # mod_security2-cookbook
 
-TODO: Enter the cookbook description here.
+# NOTICE: This cookbook is still under heavy development.  Don't use it yet.
+
 
 ## Supported Platforms
 
@@ -39,4 +40,5 @@ Include `mod_security2` in your node's `run_list`:
 
 ## License and Authors
 
+License: Apache 2.0
 Author:: Tejay Cardon (<tejay.cardon@gmail.com>)
