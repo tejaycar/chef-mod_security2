@@ -46,7 +46,7 @@ class Chef
         to version_path
       end
 
-      execute 'build mod-security' do
+      execute 'build mod_security' do
         compile_flags = node['mod_security2']['source']['compile_flags']
         compile_flags |= new_resource.compile_flags if new_resource.compile_flags
 
