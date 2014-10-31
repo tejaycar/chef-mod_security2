@@ -8,8 +8,8 @@ describe file('/opt/ModSecurity/current') do
   it { should be_linked_to '/opt/ModSecurity/versions/v2.8.0' }
 end
 
-describe file('/opt/ModSecurity/current/nginx/modsecurity/ngx_http_modsecurity.c') do
-  it { should be_file }
+describe file('/opt/ModSecurity/current/apache2/.libs') do
+  it { should be_directory }
   it { should be_readable }
 end
 

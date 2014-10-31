@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe 'mod_security2::default' do
+describe 'mod_security2::install' do
   let(:chef_run) do
-    ChefSpec::SoloRunner.new(:step_into => 'mod_security2').converge('mod_security2')
+    ChefSpec::SoloRunner.new(:step_into => 'mod_security2').converge(described_recipe)
   end
 
   context 'installing mod_security' do
@@ -16,6 +16,9 @@ describe 'mod_security2::default' do
        automake
        libtool
        apache2-threaded-dev
+       libcurl4-openssl-dev
+       libyajl-dev
+       liblua5.1-0-dev
     ).each do |pak|
       it "installs #{pak}" do
         expect(chef_run).to install_package(pak)
@@ -35,7 +38,7 @@ describe 'mod_security2::default' do
     end
 
     it 'syncs the source code' do
-      expect(chef_run).to sync_git('/opt/ModSecurity/versions/v2.8.0').with(
+      expect(chef_run).to checkout_git('/opt/ModSecurity/versions/v2.8.0').with(
         :repo => 'https://github.com/SpiderLabs/ModSecurity.git',
         :revision => 'v2.8.0'
       )

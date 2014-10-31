@@ -18,16 +18,20 @@ platforms:
 suites:
   - name: lwrp_nginx
     run_list:
-      - recipe[mod_security2]
+      - recipe[mod_security2::install]
     attributes:
       mod_security2:
         platform: nginx
 
   - name: nginx_install
     run_list:
-      - recipe[mod_security2]
-      - recipe[mod_security2::nginx_module]
-      - recipe[nginx::source]
+      - recipe[mod_security2::install]
+      - recipe[nginx::default]
     attributes:
       mod_security2:
         platform: nginx
+      nginx:
+        install_method: source
+        source:
+          modules:
+            - mod_security2::nginx_module
