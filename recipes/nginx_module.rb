@@ -1,4 +1,5 @@
 include_recipe 'mod_security2::install'
+include_recipe 'mod_security2::configure'
 
 node.run_state['nginx_configure_flags'] ||= []
 node.run_state['nginx_configure_flags'] |=

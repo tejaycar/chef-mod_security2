@@ -3,6 +3,7 @@ class Chef
     include Poise
 
     actions [:install, :delete]
+    default_action :install
 
     attribute :home, :kind_of => String
     attribute :platform, :kind_of => [String, Symbol], :equal_to => [:nginx, 'nginx'] # , :apache, 'apache']

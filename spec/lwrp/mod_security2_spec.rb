@@ -5,6 +5,10 @@ describe 'mod_security2::install' do
     ChefSpec::SoloRunner.new(:step_into => 'mod_security2').converge(described_recipe)
   end
 
+  it 'calls the lwrp' do
+    expect(chef_run).to install_mod_security2('v2.8.0')
+  end
+
   context 'installing mod_security' do
     %w(git
        libxml2

@@ -16,12 +16,18 @@ platforms:
       - recipe[apt]
 
 suites:
-  - name: lwrp_nginx
+  - name: lwrp_install
     run_list:
       - recipe[mod_security2::install]
+      - recipe[nginx]
     attributes:
       mod_security2:
         platform: nginx
+
+  - name: lwrp_configure
+    run_list:
+      - recipe[mod_security2::install]
+      - recipe[mod_security2::configure]
 
   - name: nginx_install
     run_list:
