@@ -5,7 +5,7 @@ describe file('/opt/ModSecurity') do
 end
 
 describe file('/opt/ModSecurity/current') do
-  it { should be_linked_to '/opt/ModSecurity/versions/v2.8.0' }
+  it { should be_linked_to '/opt/ModSecurity/versions/v2.9.0' }
 end
 
 describe file('/opt/ModSecurity/current/apache2/.libs') do

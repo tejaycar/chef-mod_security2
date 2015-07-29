@@ -32,6 +32,7 @@ suites:
   - name: nginx_install
     run_list:
       - recipe[mod_security2::install]
+      - recipe[mod_security2::configure]
       - recipe[nginx::default]
     attributes:
       mod_security2:

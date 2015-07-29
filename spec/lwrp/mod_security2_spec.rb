@@ -6,7 +6,7 @@ describe 'mod_security2::install' do
   end
 
   it 'calls the lwrp' do
-    expect(chef_run).to install_mod_security2('v2.8.0')
+    expect(chef_run).to install_mod_security2('v2.9.0')
   end
 
   context 'installing mod_security' do
@@ -37,14 +37,14 @@ describe 'mod_security2::install' do
 
     it 'creates a link from current to the version installed' do
       expect(chef_run).to create_link('/opt/ModSecurity/current').with(
-        :to => '/opt/ModSecurity/versions/v2.8.0'
+        :to => '/opt/ModSecurity/versions/v2.9.0'
       )
     end
 
     it 'syncs the source code' do
-      expect(chef_run).to checkout_git('/opt/ModSecurity/versions/v2.8.0').with(
+      expect(chef_run).to checkout_git('/opt/ModSecurity/versions/v2.9.0').with(
         :repo => 'https://github.com/SpiderLabs/ModSecurity.git',
-        :revision => 'v2.8.0'
+        :revision => 'v2.9.0'
       )
     end
 

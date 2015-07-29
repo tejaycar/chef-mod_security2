@@ -23,7 +23,6 @@ class Chef
 
     attr_reader :temp_dir
     attr_reader :home
-#    attr_reader :path
   end
 
   class Provider::ModSecurity2NginxConfig < Provider
@@ -67,7 +66,7 @@ class Chef
       files += add_paths(owasp_config, 'slr_rules', new_resource.slr_rules)
 
       files.sort_by! { |path| ::File.basename(path) }
-      data_files = files.select{ |f| !f.match(/.conf$/) }
+      data_files = files.select{ |f| !f.match(/\.conf(\.example)?$/) }
       data_files << ::File.join(new_resource.home, 'current', 'unicode.mapping')
       files -= data_files
       contents = files.reduce(contents) do |a, e|
