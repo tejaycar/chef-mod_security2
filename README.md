@@ -51,6 +51,35 @@ The default action is `[:install]`
 * :repo - String *default = node['mod_security2']['source']['repo']*
 
 
+### mod_security2_config
+#### Actions
+The default action is `:create'
+
+* :create - create a config file for mod_security
+* :delete - delete a config file
+
+#### Attribute Paramters
+
+`base_rules`, `optional_rules`, `experimental_rules`, and `slr_rules` all refer to OWASP rule set
+
+* path - where to put the config file
+* custom_rules - a hash of custom rules  (see details below)
+* base_rules - `true` to include all base rules, `false` to include none, and an array of filenames to include only some.
+* optional_rules - same as for base_rules
+* experimental_rules - same as for base_rules
+* slr_rules - same as for base_rules
+* tarball_url - url for the OWASP ruleset.  Default - https://github.com/SpiderLabs/owasp-modsecurity-crs/tarball/master
+
+#### custom-rules
+for custom rules, you provide a hash of rules to include.  Each hash entry takes a name for the key, and hash for the value.
+The hash includes:
+* `priority` - the priority of the rule from 0 to 99
+* `type` - `:cookbook_file`, `:template`, or `:remote_file`  - The type of resource to use for building this rule
+* `cookbook` - the cookbook that the template or cookbook file is found in (if `:cookbook_file` or `:template` type)
+* `source` - the template or cookbook_file source (if `:cookbook_file` or `:template` type)
+* `url` - the url for a remote_file
+
+
 Recipe usage
 ---------------
 ### mod_security2::install

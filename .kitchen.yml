@@ -39,6 +39,7 @@ suites:
         platform: nginx
       nginx:
         install_method: source
+        init_style: upstart
         source:
           modules:
             - mod_security2::nginx_module

@@ -113,11 +113,14 @@ class Chef
           rules_files << value
         elsif value.is_a? Hash
           if value[:type] == :template
-            rules_files << build_template(key, value[:cookbook], value[:source])
+            fail('custom rule templates must have a :cookbook and :source') unless value[:source] && value[:cookbook]
+            rules_files << build_template(key, value[:cookbook], value[:source], value[:priority] || 50)
           elsif value[:type] == :cookbook_file
-            rules_files << build_cookbook_file(key, value[:cookbook], value[:source])
+            fail('custom rule cookbook_files must have a :cookbook and :source') unless value[:source] && value[:cookbook]
+            rules_files << build_cookbook_file(key, value[:cookbook], value[:source], value[:priority] || 50)
           elsif value[:type] == :remote_file
-            files_files << build_remote_file(key, value[:url])
+            fail('custom rule remote_files must have a :url') unless value[:url]
+            rules_files << build_remote_file(key, value[:url], value[:priority] || 50)
           else
             fail 'Custom rules which have non-string values must have a value[:type] of :cookbook_file, :template, or :remote_file'
           end
@@ -128,8 +131,8 @@ class Chef
       rules_files
     end
 
-    def build_template(name, cookbook, source)
-      file_path = ::File.join(@temp_dir, name)
+    def build_template(name, cookbook, source, priority)
+      file_path = ::File.join(new_resource.temp_dir, "modsecurity_crs_#{priority}_#{name}.conf")
       template "mod_security-#{name}" do
         path file_path
         cookbook cookbook
@@ -139,8 +142,8 @@ class Chef
       file_path
     end
 
-    def build_cookbook_file(name, cookbook, source)
-      file_path = ::File.join(@temp_dir, name)
+    def build_cookbook_file(name, cookbook, source, priority)
+      file_path = ::File.join(new_resource.temp_dir, "modsecurity_crs_#{priority}_#{name}.conf")
       cookbook_file "mod_security-#{name}" do
         path file_path
         cookbook cookbook
@@ -150,8 +153,8 @@ class Chef
       file_path
     end
 
-    def build_remote_file(name, url)
-      file_path = ::File.join(@temp_dir, name)
+    def build_remote_file(name, url, priority)
+      file_path = ::File.join(new_resource.temp_dir, "modsecurity_crs_#{priority}_#{name}.conf")
       remote_file "mod_security-#{name}" do
         path file_path
         source url
