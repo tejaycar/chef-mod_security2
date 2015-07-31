@@ -70,7 +70,7 @@ class Chef
       data_files << ::File.join(new_resource.home, 'current', 'unicode.mapping')
       files -= data_files
       contents = files.reduce(contents) do |a, e|
-        a + ['#####', '#', "\# #{::File.basename(e).to_s}", '#', '######'] + IO.readlines(e)
+        a + ['#####', '#', "\# #{::File.basename(e).to_s}", '#', '######', "\n"] + IO.readlines(e)
       end
 
       notifying_block do
