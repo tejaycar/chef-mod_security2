@@ -79,6 +79,20 @@ The hash includes:
 * `source` - the template or cookbook_file source (if `:cookbook_file` or `:template` type)
 * `url` - the url for a remote_file
 
+This cookbook includes a cookbook_file for enabling concurrent audit logs for mod_security
+
+```ruby
+mod_security2_config '/etc/modsecurity/mod_security.conf' do
+  base_rules true
+  custom_rules :concurrent_logging => {
+    :type => :cookbook_file,
+    :cookbook => 'mod_security2',
+    :source => 'concurrent_logging.conf',
+    :priority => 99
+  }
+end
+```
+
 
 Recipe usage
 ---------------
