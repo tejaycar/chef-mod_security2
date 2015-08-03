@@ -54,7 +54,7 @@ class Chef
       unless ::File.exist? recommended_config
         fail "#{recommended_config} missing please install mod_security by utilizing the mod_security2 resource to get this config"
       end
-      contents = [ '#####', '#', '# modsecurity.conf-recommended', '#', '######' ]
+      contents = [['#####', '#', '# modsecurity.conf-recommended', '#', "######\n"].join("\n")]
       contents += IO.readlines recommended_config
 
       files = ::Dir.glob(owasp_config)
@@ -66,11 +66,12 @@ class Chef
       files += add_paths(owasp_config, 'slr_rules', new_resource.slr_rules)
 
       files.sort_by! { |path| ::File.basename(path) }
-      data_files = files.select{ |f| !f.match(/\.conf(\.example)?$/) }
+      data_files = files.select { |f| !f.match(/\.conf(\.example)?$/) }
       data_files << ::File.join(new_resource.home, 'current', 'unicode.mapping')
       files -= data_files
       contents = files.reduce(contents) do |a, e|
-        a + ['#####', '#', "\# #{::File.basename(e).to_s}", '#', '######', "\n"] + IO.readlines(e)
+        a << ['#####', '#', "\# #{::File.basename(e)}", '#', "######\n"].join("\n")
+        a + IO.readlines(e)
       end
 
       notifying_block do
@@ -109,26 +110,30 @@ class Chef
     def build_custom_rules
       rules_files = []
       new_resource.custom_rules.each do |key, value|
-        if value.is_a? String
-          rules_files << value
-        elsif value.is_a? Hash
-          if value[:type] == :template
-            fail('custom rule templates must have a :cookbook and :source') unless value[:source] && value[:cookbook]
-            rules_files << build_template(key, value[:cookbook], value[:source], value[:priority] || 50)
-          elsif value[:type] == :cookbook_file
-            fail('custom rule cookbook_files must have a :cookbook and :source') unless value[:source] && value[:cookbook]
-            rules_files << build_cookbook_file(key, value[:cookbook], value[:source], value[:priority] || 50)
-          elsif value[:type] == :remote_file
-            fail('custom rule remote_files must have a :url') unless value[:url]
-            rules_files << build_remote_file(key, value[:url], value[:priority] || 50)
-          else
-            fail 'Custom rules which have non-string values must have a value[:type] of :cookbook_file, :template, or :remote_file'
-          end
-        else
-          fail 'Custom rules must have a value of either Hash, or String (the full path to the rules file)'
-        end
+        build_rule(rules_files, key, value)
       end
       rules_files
+    end
+
+    def build_rule(rules_files, key, value)
+      if value.is_a? String
+        rules_files << value
+      elsif value.is_a? Hash
+        if value[:type] == :template
+          fail('custom rule templates must have a :cookbook and :source') unless value[:source] && value[:cookbook]
+          rules_files << build_template(key, value[:cookbook], value[:source], value[:priority] || 50)
+        elsif value[:type] == :cookbook_file
+          fail('custom rule cookbook_files must have a :cookbook and :source') unless value[:source] && value[:cookbook]
+          rules_files << build_cookbook_file(key, value[:cookbook], value[:source], value[:priority] || 50)
+        elsif value[:type] == :remote_file
+          fail('custom rule remote_files must have a :url') unless value[:url]
+          rules_files << build_remote_file(key, value[:url], value[:priority] || 50)
+        else
+          fail 'Custom rules which have non-string values must have a value[:type] of :cookbook_file, :template, or :remote_file'
+        end
+      else
+        fail 'Custom rules must have a value of either Hash, or String (the full path to the rules file)'
+      end
     end
 
     def build_template(name, cookbook, source, priority)
