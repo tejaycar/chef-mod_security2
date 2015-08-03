@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+combined_log = <%= @combined_log %>
+concurrent_log_dir = <%= @log_dir %>
+
+concurrent_files = Dir.glob(::File.join(concurrent_log_dir, '**', '*'))
+concurrent_files.select! { |item| /\d{8}\-\d{6}\-.*/.match(::File.basename(item)) }
+
+IO.open(combined_log, 'a') do |merged_file|
+  concurrent_files.each do |next_file|
+    merged_file.write IO.read(next_file)
+    ::File.delete(next_file) if <%= @delete.nil? ? true : @delete %>
+  end
+end

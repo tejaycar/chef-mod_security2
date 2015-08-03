@@ -93,6 +93,37 @@ mod_security2_config '/etc/modsecurity/mod_security.conf' do
 end
 ```
 
+Templates and Files
+--------------
+This cookbook provides a couple of templates and files that are helpful for your application cookbook.  Each
+allows you to get some common functionality while maintaining your own controll of the resources.
+
+### mod_security_location
+This template is used to create a mod_security location in your nginx configs.  It is a full nginx vhost config
+that simply listens on an http and https port, applies mod_security, and then proxies to a local non-ssl port.
+
+#### variables
+* `fqdn` totally optional, node['fqdn'] will be used otherwise.  Just for a comment about chef managing this file
+* `server_name` - the server name to apply to this nginx vhost
+* `listen_port` - the http listen port (responds with a 301 redirect to the ssl port)
+* `ssl_listen_port` - the https port to listen on
+* `ssl_certificate` - the path to the ssl certificate
+* `ssl_certificate_key` - the path to the key for the ssl certificate
+* `modsecuriyt_config` - the path to the mod_security config file
+* `forward_port` - the port to forward traffic to.
+
+### mod_security_log_cleanup.rb.erb
+This template creates a ruby script file to merge mod_security concurrent logs into a single combined log file.
+
+#### variables
+* `combined_log` - path to store the combined log at
+* `log_dir` - path of the directory containing the concurrent logs
+* `delete` - default to true.  Do we delete the files after they are merged?
+
+### concurrent_logging.conf
+This file can be used as a 'custom_rule' in `mod_security2_config` resource to enable concurrent logging.  If you do
+ use it, be sure to give it a priority above 10 so that it can override the serial logging that comes with OWASP.
+
 
 Recipe usage
 ---------------
