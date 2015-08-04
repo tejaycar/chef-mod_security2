@@ -1,3 +1,7 @@
+0.3.4
+------
+update Berksfile to use an BERKS_SOURCE as the source, if available, and then fall back to supermarket
+
 0.3.2
 ------
 added a template for the concurrent log cleanup
